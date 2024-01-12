@@ -27,23 +27,20 @@ const options = {
 
   onClose(selectedDates) {
     userSelectedDate = selectedDates[0].getTime();
-    console.log(userSelectedDate);
-    console.log(Date.now());
-    if (userSelectedDate > Date.now()) {
+    if (userSelectedDate < Date.now()) {
+      btnEl.disabled = true;
+      izitoast.show({
+       message: "Please choose a date in the future",
+       position: "topCenter",
+       color: "red",
+      });
+    } else {
       btnEl.disabled = false;
-      showMessage();
-    }    
+    }
   },
 };
 
 const fp = flatpickr(inputEl, options);
-
-function showMessage() {
-  iziToast.show({
-        title: 'Успіх',
-        message: 'Операція виконана успішно!',
-      });
-}
 
 function convertMs(ms) {
   const second = 1000;
@@ -59,10 +56,10 @@ function convertMs(ms) {
 }
 
 function updateTimer({days, hours, minutes, seconds}){
-   timerDays.textContent = `${days}`;
-   timerHours.textContent = `${hours}`;
-   timerMinutes.textContent = `${minutes}`;
-   timerSeconds.textContent = `${seconds}`;
+ timerDays.textContent = `${String(days).padStart(2,"0")}`;
+ timerHours.textContent = `${String(hours).padStart(2,"0")}`;
+ timerMinutes.textContent = `${String(minutes).padStart(2,"0")}`;
+ timerSeconds.textContent = `${String(seconds).padStart(2,"0")}`;
 }
 
 
@@ -70,21 +67,15 @@ btnEl.addEventListener("click", isStartTimer)
 
 function isStartTimer(event) {
   btnEl.disabled = true;
-  
-  
-    const intervalId = setInterval(() => {
-    const currentTime = Date.now(); // отримуємо поточний час
-    const ms = userSelectedDate - currentTime; // отримуємо різницю в часі 
-    const restTime = convertMs(ms); // перетворюємо кількість мілісекунд (різниця в часі) на обʼєкт з годинами, хвилинами та секундами
-    updateTimer(restTime); // викликаємо функцію, яка запише дані в таймер
-    if (ms === 0) {
-        clearInterval(intervalId);
-      }
+    
+  const intervalId = setInterval(() => {
+  const currentTime = Date.now(); // отримуємо поточний час
+  const ms = userSelectedDate - currentTime; // отримуємо різницю в часі 
+  const restTime = convertMs(ms); // перетворюємо кількість мілісекунд (різниця в часі) на обʼєкт з годинами, хвилинами та секундами
+  updateTimer(restTime); // викликаємо функцію, яка запише дані в таймер
+  if (ms <= 1000) {
+      clearInterval(intervalId);
+    }
       
-    // if (ms <= 0) {
-    //     clearInterval(intervalId);
-    //     btnEl.disabled = false; // Робимо кнопку знову активною, коли таймер завершиться
-    //     timerStarted = false; // Змінюємо стан таймера
-    //   }
-    }, 1000);
+  }, 1000);
 }
