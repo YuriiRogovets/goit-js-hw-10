@@ -12,8 +12,6 @@ const timerMinutes = document.querySelector("[data-minutes]");
 const timerSeconds = document.querySelector("[data-seconds]");
 
 let userSelectedDate;
-let timerStarted = false;
-console.log(timerStarted);
 btnEl.disabled = true;
 
 const options = {
@@ -33,6 +31,7 @@ const options = {
        message: "Please choose a date in the future",
        position: "topCenter",
        color: "red",
+      
       });
     } else {
       btnEl.disabled = false;
@@ -40,7 +39,7 @@ const options = {
   },
 };
 
-const fp = flatpickr(inputEl, options);
+flatpickr(inputEl, options);
 
 function convertMs(ms) {
   const second = 1000;
@@ -76,6 +75,6 @@ function isStartTimer(event) {
   if (ms <= 1000) {
       clearInterval(intervalId);
     }
-      
+
   }, 1000);
 }
